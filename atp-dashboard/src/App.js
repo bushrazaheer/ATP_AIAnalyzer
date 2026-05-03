@@ -164,9 +164,14 @@ pdf.text(`${idcsra.dependent_variable?.instrument_and_precision || "N/A"}`, 70, 
     formData.append('subject', subject.toLowerCase());
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/analyze', formData);
-      setAnalysisData(response.data);
-      console.log("FULL ANALYSIS OBJECT:", JSON.stringify(response.data, null, 2));
+      //const response = await axios.post('http://127.0.0.1:8000/analyze', formData);
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/analyze`);
+        //method: 'POST',
+        //body: formData
+      //});
+      const data = await response.json();
+      setAnalysisData(data);
+      console.log("FULL ANALYSIS OBJECT:", JSON.stringify(data, null, 2));
     } catch (error) {
       alert("Backend connection error. Ensure engine.py is running.");
     } finally {
