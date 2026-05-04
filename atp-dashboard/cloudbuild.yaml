@@ -1,0 +1,28 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build', 
+      '-t', 'gcr.io/$PROJECT_ID/atp-dashboard:$SHORT_SHA', 
+      '--build-arg', 'REACT_APP_API_BASE_URL=https://your-backend-url.a.run.app',
+      '.'
+    ]
+
+  # Step 2: Push the image to the registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/atp-dashboard:$SHORT_SHA']
+
+  # Step 3: Deploy the image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: [
+      'run', 'deploy', 'atp-dashboard',
+      '--image', 'gcr.io/$PROJECT_ID/atp-dashboard:$SHORT_SHA',
+      '--region', 'europe-west1',
+      '--platform', 'managed',
+      '--allow-unauthenticated'
+    ]
+
+# This block solves your "invalid argument" error
+options:
+  logging: CLOUD_LOGGING_ONLY
