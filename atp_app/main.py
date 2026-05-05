@@ -17,18 +17,25 @@ app.add_middleware(
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...), subject: str = Form("chemistry")):
     try:
+        print("🚀 REQUEST RECEIVED")
+        print("📘 Subject:", subject)
+        print("📁 File:", file.filename)
+
         content = await file.read()
+        print("📦 File size:", len(content))
+
         result = await analyze_lab_image(content, file.content_type, subject)
-        
-        # Flatten the result so React can see 'detections' immediately
+
+        print("✅ ANALYSIS DONE")
+
         return {
             "status": "success",
-            **result 
+            **result
         }
+
     except Exception as e:
-        print(f"Error: {e}")
+        print("❌ ERROR IN BACKEND:", str(e))
         return {"status": "error", "message": str(e)}
-if __name__ == "__main__":
     import uvicorn
     # Force 127.0.0.1 to stop the 'Site can't be reached' browser error
     uvicorn.run(app, host="127.0.0.1", port=8000)
