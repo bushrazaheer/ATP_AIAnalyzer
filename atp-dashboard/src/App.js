@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 
 const App = () => {
 
+console.log("🔥🔥🔥 NEW BUILD LOADED 🔥🔥🔥");
   const [isStarted, setIsStarted] = useState(false);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
