@@ -172,7 +172,11 @@ const handleAnalyze = async () => {
     const response = await fetch(url, {
       method: "POST",
       body: formData,
-    });
+    });if (!response.ok) {
+  const errText = await response.text();
+  console.error("Backend Error Response:", errText);
+  throw new Error(`HTTP ${response.status}`);
+}
 
     console.log("📡 Response status:", response.status);
 
