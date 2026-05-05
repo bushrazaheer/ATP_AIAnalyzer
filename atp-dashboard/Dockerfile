@@ -5,7 +5,10 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 # Use build-time args for your Cloud Run Backend URL
-ARG REACT_APP_API_BASE_URL
+# // ARG REACT_APP_API_BASE_URL
+# // ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
+
+ARG REACT_APP_API_BASE_URL=https://atp-app-580063500531.europe-west1.run.app
 ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
 RUN npm run build
 
