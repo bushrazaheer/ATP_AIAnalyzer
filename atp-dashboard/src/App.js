@@ -165,8 +165,8 @@ const handleAnalyze = async () => {
   console.log("ENV API BASE:", process.env.REACT_APP_API_BASE_URL);
 console.log("FINAL URL:", `${process.env.REACT_APP_API_BASE_URL}/analyze`);
 
-  //const url = `${process.env.REACT_APP_API_BASE_URL}/analyze`;
-  const url = "https://atp-app-580063500531.europe-west1.run.app/analyze";
+  const url = `${process.env.REACT_APP_API_BASE_URL}/analyze`;
+  //const url = "https://atp-app-580063500531.europe-west1.run.app/analyze";
 
   console.log("🚀 API URL:", url);
   console.log("📦 Subject:", subject);
@@ -323,7 +323,10 @@ const equations = experiment.equations || {};
           </div>
           
           <button 
-            onClick={handleAnalyze} 
+            onClick={() => {
+    console.log("🔥 ANALYZE CLICKED");
+    handleAnalyze();
+  }}
             disabled={loading}
             className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest transition-all ${loading ? 'bg-slate-800 text-slate-600 animate-pulse' : 'bg-white text-black hover:bg-cyan-400'}`}
           >
