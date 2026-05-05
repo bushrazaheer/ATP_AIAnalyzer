@@ -154,38 +154,46 @@ pdf.text(`${idcsra.dependent_variable?.instrument_and_precision || "N/A"}`, 70, 
     }
   };
 
-  const handleAnalyze = async () => {
-  if (loading) return;
-  if (!file) return alert(`Please upload a ${subject} lab.`);
+const handleAnalyze = async () => {
+  if (!file) return alert("Please upload file");
 
   setLoading(true);
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("subject", subject.toLowerCase());
+  formData.append("subject", subject);
+
+  const url = `${process.env.REACT_APP_API_BASE_URL}/analyze`;
+
+  console.log("🚀 API URL:", url);
+  console.log("📦 Subject:", subject);
 
   try {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_BASE_URL}/analyze`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
 
-    const data = await response.json();
+    console.log("📡 Response status:", response.status);
+
+    const text = await response.text();
+    console.log("📥 Raw response:", text);
+
+    const data = JSON.parse(text);
     setAnalysisData(data);
 
-    console.log("FULL ANALYSIS OBJECT:", data);
-  } catch (error) {
-    console.error(error);
-    alert("Backend connection error.");
+  } catch (err) {
+    console.error("❌ Request failed:", err);
+    alert("Backend connection error");
   } finally {
     setLoading(false);
   }
+
     // Add this inside your handleAnalyze function after getting the response
 console.log("FULL ANALYSIS OBJECT:", JSON.stringify(analysisData, null, 2));
   };
+
+  
   const handleSubjectChange = (newSubject) => {
   if (analysisData) {
     const confirmChange = window.confirm(
