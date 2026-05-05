@@ -8,14 +8,19 @@ from prompts.biology_sme import BIO_PROMPT
 from prompts.physics_sme import PHYS_PROMPT
 from dotenv import load_dotenv
 
-load_dotenv()  # This reads the .env file automatically
 
-# Use the model ID as per your project requirements
-MODEL_ID = "gemini-2.5-flash" 
+MODEL_ID = "gemini-2.5-flash"
+# Only load .env locally (NOT in Cloud Run)
+if os.getenv("K_SERVICE") is None:
+    from dotenv import load_dotenv
+    load_dotenv()
+
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
-    raise ValueError("The .env file was found but GEMINI_API_KEY is missing!")
+    raise ValueError("GEMINI_API_KEY is missing")
+
+
 
 client = genai.Client(
     api_key=api_key,
