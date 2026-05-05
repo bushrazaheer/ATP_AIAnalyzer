@@ -155,28 +155,34 @@ pdf.text(`${idcsra.dependent_variable?.instrument_and_precision || "N/A"}`, 70, 
   };
 
   const handleAnalyze = async () => {
-    if (loading) return;
-    if (!file) return alert(`Please upload a ${subject} lab.`);
-    
-    setLoading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('subject', subject.toLowerCase());
+  if (loading) return;
+  if (!file) return alert(`Please upload a ${subject} lab.`);
 
-    try {
-      //const response = await axios.post('http://127.0.0.1:8000/analyze', formData);
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/analyze`);
-        //method: 'POST',
-        //body: formData
-      //});
-      const data = await response.json();
-      setAnalysisData(data);
-      console.log("FULL ANALYSIS OBJECT:", JSON.stringify(data, null, 2));
-    } catch (error) {
-      alert("Backend connection error. Ensure engine.py is running.");
-    } finally {
-      setLoading(false);
-    }
+  setLoading(true);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("subject", subject.toLowerCase());
+
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_BASE_URL}/analyze`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+    setAnalysisData(data);
+
+    console.log("FULL ANALYSIS OBJECT:", data);
+  } catch (error) {
+    console.error(error);
+    alert("Backend connection error.");
+  } finally {
+    setLoading(false);
+  }
     // Add this inside your handleAnalyze function after getting the response
 console.log("FULL ANALYSIS OBJECT:", JSON.stringify(analysisData, null, 2));
   };
