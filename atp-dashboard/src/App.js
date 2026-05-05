@@ -162,8 +162,11 @@ const handleAnalyze = async () => {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("subject", subject);
+  console.log("ENV API BASE:", process.env.REACT_APP_API_BASE_URL);
+console.log("FINAL URL:", `${process.env.REACT_APP_API_BASE_URL}/analyze`);
 
-  const url = `${process.env.REACT_APP_API_BASE_URL}/analyze`;
+  //const url = `${process.env.REACT_APP_API_BASE_URL}/analyze`;
+  const url = "https://atp-app-580063500531.europe-west1.run.app/analyze";
 
   console.log("🚀 API URL:", url);
   console.log("📦 Subject:", subject);
