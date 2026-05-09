@@ -187,8 +187,16 @@ console.log("FINAL URL:", `${process.env.REACT_APP_API_BASE_URL}/analyze`);
     const text = await response.text();
     console.log("📥 Raw response:", text);
 
-    const data = JSON.parse(text);
-    setAnalysisData(data);
+    let data;
+try {
+  data = JSON.parse(text);
+} catch (err) {
+  console.error("JSON Parse Failed:", text);
+  alert("Backend returned invalid JSON");
+  return;
+}
+
+setAnalysisData(data);
 
   } catch (err) {
     console.error("❌ Request failed:", err);
@@ -223,7 +231,14 @@ const plan = experiment.experimental_plan_idcsra || {};
 const equations = experiment.equations || {};
   const quizData = experiment.paper_6_style_questions || [];
   const reagents = experiment.reagents || [];
+const safeText = (val) => {
+  if (!val) return "N/A";
 
+  return String(val)
+    .replace(/\\n/g, " ")
+    .replace(/\\t/g, " ")
+    .replace(/\\/g, "");
+};
   const getTabs = () => {
     const baseTabs = ['verify', 'plan', 'observations'];
     if (subject === 'Chemistry') baseTabs.push('equations');
@@ -471,34 +486,53 @@ const equations = experiment.equations || {};
 )} */}
 
 {activeTab === 'equations' && (
-  
   <div className="space-y-4">
+
     <div className="p-5 bg-slate-800/30 border border-slate-700 rounded-2xl">
-      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">Word Equation</p>
+      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">
+        Word Equation
+      </p>
+
       <p className="text-white">
-  {JSON.parse(`"${equations.word_equation}"`)}
-</p>
+        {safeText(equations.word_equation)}
+      </p>
+
       <p className="text-sm italic text-white">
         {equations.word || "N/A"}
       </p>
     </div>
+
     <div className="p-5 bg-slate-800/30 border border-slate-700 rounded-2xl">
-      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">Ionic Half-Equations</p>
-      {equations.ionic_half_equations?.map((eq, i) => (
-        <p key={i} className="text-sm font-mono text-white mb-2 last:mb-0">{eq}</p>
-      )) || <p className="text-white text-sm">N/A</p>}
+      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">
+        Ionic Half-Equations
+      </p>
+
+      {equations.ionic_half_equations?.length > 0 ? (
+        equations.ionic_half_equations.map((eq, i) => (
+          <p
+            key={i}
+            className="text-sm font-mono text-white mb-2 last:mb-0"
+          >
+            {safeText(eq)}
+          </p>
+        ))
+      ) : (
+        <p className="text-white text-sm">N/A</p>
+      )}
     </div>
-    
+
     <div className="p-5 bg-slate-800/30 border border-slate-700 rounded-2xl">
-      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">Balanced Equation</p>
-   
-<p className="text-white">
-  {JSON.parse(`"${equations.balanced_chemical}"`)}
-</p>
+      <p className="text-[10px] text-cyan-500 font-black uppercase mb-2">
+        Balanced Equation
+      </p>
+
+      <p className="text-white">
+        {safeText(equations.balanced_chemical)}
+      </p>
     </div>
+
   </div>
 )}
-
                 {activeTab === 'Sample Exam Questions' && (
                   <div className="space-y-4 animate-in fade-in">
                     {quizData.length > 0 ? quizData.map((q, i) => (

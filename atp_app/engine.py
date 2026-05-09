@@ -67,6 +67,10 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
 
     # 4. FINAL RETURN 
     # This structure ensures the keys exist for your React UI
+def safe_json_string(text):
+    return text.replace("\\", "\\\\").replace("\n", " ").replace("\t", " ")
+
+
     return {
         "experiment_analysis": analysis_data,
         "status": "success"
