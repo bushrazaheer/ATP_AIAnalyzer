@@ -65,13 +65,27 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
             # Return a structured error so the frontend doesn't crash
             return {"error": "JSON_PARSE_FAILED", "raw_response": raw_text[:100]}
 
-    # 4. FINAL RETURN 
-    # This structure ensures the keys exist for your React UI
-def safe_json_string(text):
-    return text.replace("\\", "\\\\").replace("\n", " ").replace("\t", " ")
+        # 4. SANITIZE STRINGS RECURSIVELY
+    def sanitize_data(obj):
+        if isinstance(obj, dict):
+            return {k: sanitize_data(v) for k, v in obj.items()}
 
+        elif isinstance(obj, list):
+            return [sanitize_data(item) for item in obj]
 
+        elif isinstance(obj, str):
+            return (
+                obj.replace("\\", "\\\\")
+                   .replace("\n", " ")
+                   .replace("\t", " ")
+            )
+
+        return obj
+
+    safe_analysis_data = sanitize_data(analysis_data)
+
+    # 5. FINAL RETURN
     return {
-        "experiment_analysis": analysis_data,
+        "experiment_analysis": safe_analysis_data,
         "status": "success"
     }
