@@ -14,6 +14,21 @@ def extract_first_line(text):
         return "N/A"
     return str(text).split("\n")[0].strip()
 
+def extract_word_equation(text):
+    if not text:
+        return "N/A"
+
+    text = str(text)
+
+    # take only first line
+    first_line = text.split("\n")[0].strip()
+
+    # HARD CLEAN: remove sentences if model ignored rules
+    if "." in first_line:
+        first_line = first_line.split(".")[0].strip()
+
+    return first_line
+
 MODEL_ID = "gemini-2.5-flash"
 # Only load .env locally (NOT in Cloud Run)
 if os.getenv("K_SERVICE") is None:
@@ -70,22 +85,7 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
             # Return a structured error so the frontend doesn't crash
             return {"error": "JSON_PARSE_FAILED", "raw_response": raw_text[:100]}
 
-        # 4. SANITIZE STRINGS RECURSIVELY
-    def sanitize_data(obj):
-        if isinstance(obj, dict):
-            return {k: sanitize_data(v) for k, v in obj.items()}
-
-        elif isinstance(obj, list):
-            return [sanitize_data(item) for item in obj]
-
-        elif isinstance(obj, str):
-            return (
-                obj.replace("\\", "\\\\")
-                   .replace("\n", " ")
-                   .replace("\t", " ")
-            )
-
-        return obj
+        
 
     # 4. SANITIZE STRINGS RECURSIVELY
     def sanitize_data(obj):
@@ -106,6 +106,43 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
 
 
     analysis_data = sanitize_data(analysis_data)
+
+    def extract_word_equation(text):
+    if not text:
+        return "N/A"
+
+    text = str(text)
+
+    # take only first line
+    first_line = text.split("\n")[0].strip()
+
+    # remove explanation sentences if model ignored rules
+    if "." in first_line:
+        first_line = first_line.split(".")[0].strip()
+
+    return first_line
+
+
+    # FORCE CLEAN WORD EQUATION HERE
+    try:
+        if (
+            "equations" in analysis_data
+            and "word" in analysis_data["equations"]
+        ):
+            analysis_data["equations"]["word"] = extract_word_equation(
+                analysis_data["equations"]["word"]
+            )
+    except Exception as e:
+        print("Word equation sanitization failed:", e)
+
+        # FORCE WORD EQUATION TO BE SINGLE LINE ONLY
+        try:
+            if "equations" in analysis_data and "word" in analysis_data["equations"]:
+                analysis_data["equations"]["word"] = extract_first_line(
+                    analysis_data["equations"]["word"]
+                )
+        except Exception as e:
+            print("Word equation sanitization failed:", e)
 
     # 5. FINAL RETURN
     return {

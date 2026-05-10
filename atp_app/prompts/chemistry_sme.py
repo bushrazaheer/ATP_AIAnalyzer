@@ -109,7 +109,7 @@ OUTPUT JSON STRUCTURE:
 
   "equations": {
     "word":
-      "Return ONLY a single-line word equation. STRICT RULES:
+      "STRICT OUTPUT MODE: Return ONLY ONE LINE word equation. No explanation allowed under any condition. If explanation appears, output is invalid. Output format ONLY: Reactant + Reactant → Product + Product"
       - No explanations
       - No sentences
       - No brackets
