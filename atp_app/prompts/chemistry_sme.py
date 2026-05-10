@@ -71,12 +71,12 @@ OUTPUT JSON STRUCTURE:
   },
   
   "equations": {
-    "word": "ONE LINE ONLY. Format: Reactant + Reactant → Product + Product. NO explanations, sentences, brackets, states, or commentary.",
+    "word": "ABSOLUTE REQUIREMENT: Output MUST be EXACTLY ONE LINE in this format: reactant + reactant → product + product. FORBIDDEN: All sentences, periods, explanations, phrases like 'involves', 'during', 'at the', 'solution'. ONLY chemical names separated by + and →. Example: copper(II) sulfate + water → copper + oxygen + sulfuric acid",
     
-    "balanced_chemical": "ONE complete balanced equation with states (s/l/g/aq)",
+    "balanced_chemical": "ONE complete balanced equation with states (s/l/g/aq). Example: 2CuSO4(aq) + 2H2O(l) → 2Cu(s) + O2(g) + 2H2SO4(aq)",
     
     "ionic_half_equations": [
-      "Half-equation with electrons"
+      "Half-equation with electrons. Example: Cu²⁺(aq) + 2e⁻ → Cu(s)"
     ]
   },
   
