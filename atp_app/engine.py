@@ -108,19 +108,19 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
     analysis_data = sanitize_data(analysis_data)
 
     def extract_word_equation(text):
-    if not text:
-        return "N/A"
+        if not text:
+            return "N/A"
 
-    text = str(text)
+        text = str(text)
 
-    # take only first line
-    first_line = text.split("\n")[0].strip()
+        # take only first line
+        first_line = text.split("\n")[0].strip()
 
-    # remove explanation sentences if model ignored rules
-    if "." in first_line:
-        first_line = first_line.split(".")[0].strip()
+        # remove explanation sentences if model ignored rules
+        if "." in first_line:
+            first_line = first_line.split(".")[0].strip()
 
-    return first_line
+        return first_line
 
 
     # FORCE CLEAN WORD EQUATION HERE
@@ -146,6 +146,6 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
 
     # 5. FINAL RETURN
     return {
-        "experiment_analysis": safe_analysis_data,
+        "experiment_analysis": analysis_data,
         "status": "success"
     }
