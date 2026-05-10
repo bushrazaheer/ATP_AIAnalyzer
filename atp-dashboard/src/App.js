@@ -494,7 +494,7 @@ const safeText = (val) => {
       </p>
 
       <p className="text-white">
-        {safeText(equations.word_equation)}
+        {safeText(equations.word)}
       </p>
 
       <p className="text-sm italic text-white">
