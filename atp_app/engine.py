@@ -9,6 +9,11 @@ from prompts.physics_sme import PHYS_PROMPT
 from dotenv import load_dotenv
 
 
+def extract_first_line(text):
+    if not text:
+        return "N/A"
+    return str(text).split("\n")[0].strip()
+
 MODEL_ID = "gemini-2.5-flash"
 # Only load .env locally (NOT in Cloud Run)
 if os.getenv("K_SERVICE") is None:
@@ -82,7 +87,25 @@ async def analyze_lab_image(image_bytes, mime_type, subject="chemistry"):
 
         return obj
 
-    safe_analysis_data = sanitize_data(analysis_data)
+    # 4. SANITIZE STRINGS RECURSIVELY
+    def sanitize_data(obj):
+        if isinstance(obj, dict):
+            return {k: sanitize_data(v) for k, v in obj.items()}
+
+        elif isinstance(obj, list):
+            return [sanitize_data(item) for item in obj]
+
+        elif isinstance(obj, str):
+            return (
+                obj.replace("\\", "\\\\")
+                .replace("\n", " ")
+                .replace("\t", " ")
+            )
+
+        return obj
+
+
+    analysis_data = sanitize_data(analysis_data)
 
     # 5. FINAL RETURN
     return {

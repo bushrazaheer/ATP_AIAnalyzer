@@ -39,7 +39,7 @@ STRICT FORMATTING RULES:
 - If information is not visible in the image, return "N/A".
 - Keep every string under 25 words unless it is a question.
 - Do NOT hallucinate missing experiment details.
-- Word equations must contain only chemical names and arrows.
+- Word equation field is NOT allowed to contain explanations under any condition.
 - Balanced equations must contain only ONE final balanced equation.
 - Do NOT include phrases like:
   - "overall reaction"
@@ -108,9 +108,18 @@ OUTPUT JSON STRUCTURE:
   },
 
   "equations": {
-
     "word":
-      "Chemical names only with arrows",
+      "Return ONLY a single-line word equation. STRICT RULES:
+      - No explanations
+      - No sentences
+      - No brackets
+      - No states
+      - No commentary
+      - Only chemical names + + + →
+      - ONE LINE ONLY
+
+      Example format:
+      Copper(II) sulfate + water → copper + oxygen + sulfuric acid"
 
     "balanced_chemical":
       "ONE complete balanced equation only",
