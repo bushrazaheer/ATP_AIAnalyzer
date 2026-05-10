@@ -112,9 +112,9 @@ OUTPUT JSON STRUCTURE:
       "How mean values are calculated"
   },
 
+  
   "equations": {
-    "word":
-      "STRICT OUTPUT MODE: Return ONLY ONE LINE word equation. No explanation allowed under any condition. If explanation appears, output is invalid. Output format ONLY: Reactant + Reactant → Product + Product"
+    "word":"STRICT OUTPUT MODE: Return ONLY ONE LINE word equation. No explanation allowed under any condition. If explanation appears, output is invalid. Output format ONLY: Reactant + Reactant → Product + Product"
       - No explanations
       - No sentences
       - No brackets

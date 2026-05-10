@@ -497,10 +497,7 @@ const safeText = (val) => {
         {safeText(equations.word)}
       </p>
 
-      <p className="text-sm italic text-white">
-        
-        {equations.word || "N/A"}
-      </p>
+      
     </div>
 
     <div className="p-5 bg-slate-800/30 border border-slate-700 rounded-2xl">
